@@ -56,24 +56,24 @@ class Foo():
 def test_short_file():
     checker = FileLengthChecker(max_file_len=config.MAX_FILE_LEN)
 
-    _assert_violations(checker.find_violations(short_file), None)
+    _assert_violations(checker.find_violations("test", short_file), None)
 
 
 def test_long_file():
     checker = FileLengthChecker(max_file_len=config.MAX_FILE_LEN)
 
-    _assert_violations(checker.find_violations(long_file), [TooLargeFileViolation])
+    _assert_violations(checker.find_violations("test", long_file), [TooLargeFileViolation])
 
 
 def test_short_function():
     checker = FunctionLenghtChecker(max_func_len=config.MAX_FUNC_LEN)
 
-    _assert_violations(checker.find_violations(short_function_def), None)
+    _assert_violations(checker.find_violations("test", short_function_def), None)
 
 
 def test_long_function():
     checker = FunctionLenghtChecker(max_func_len=config.MAX_FUNC_LEN)
 
     _assert_violations(
-        checker.find_violations(long_function_def), [TooLargeFunctionViolation]
+        checker.find_violations("test", long_function_def), [TooLargeFunctionViolation]
     )
