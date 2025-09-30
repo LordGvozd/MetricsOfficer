@@ -5,7 +5,7 @@ from officer.metrics.loc import (
     TooLargeFunctionViolation,
 )
 from officer import config
-from officer.types import MetricViolation
+from officer.models import MetricViolation
 
 
 def _assert_violations(

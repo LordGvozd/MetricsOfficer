@@ -1,26 +1,32 @@
 import ast
-from officer.types import (
+from officer.models import (
     AstMetricChecker,
-    MetricViolation,
+    EntityMetricViolation,
+    FileMetricViolation,
     MetricsError,
 )
 
-
-class TooLargeFileViolation(MetricViolation):
+class TooLargeFileViolation(FileMetricViolation):
     """You should write less code in one file."""
 
+    code: int = 101
 
-class TooLargeFunctionViolation(MetricViolation):
+
+class TooLargeFunctionViolation(EntityMetricViolation):
     """You should write less of code in one function."""
+
+    code: int = 102
 
 
 class FileLengthChecker:
     def __init__(self, max_file_len: int) -> None:
         self._max_file_len = max_file_len
 
-    def find_violations(self, source: str) -> list[TooLargeFileViolation] | None:
+    def find_violations(
+        self, filename: str, source: str
+    ) -> list[TooLargeFileViolation] | None:
         if source.count("\n") > self._max_file_len:
-            return [TooLargeFileViolation()]
+            return [TooLargeFileViolation(filename=filename)]
         return None
 
 
@@ -37,6 +43,8 @@ class FunctionLenghtChecker(AstMetricChecker):
             raise MetricsError("Cant get source code!")
 
         if function_code.count("\n") > self._max_func_len:
-            self.add_violation(TooLargeFunctionViolation())
+            self.add_violation(
+                TooLargeFunctionViolation(filename=self._filename, line=node.lineno, col=node.col_offset)
+            )
 
         self.generic_visit(node)
