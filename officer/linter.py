@@ -11,10 +11,12 @@ from officer.models import (
 )
 from officer.metrics.loc import FileLengthChecker, FunctionLenghtChecker
 
+
 class Colors:
     RED = "\033[91m"
     GREEN = "\033[92m"
     RESET = "\033[0m"
+
 
 class Formater:
     def format(self, violation: MetricViolation) -> str:
@@ -82,7 +84,7 @@ class Linter:
 
         if self._has_errors:
             exit(1)
-        
+
         print(Colors.GREEN + "OK" + Colors.RESET)
 
 

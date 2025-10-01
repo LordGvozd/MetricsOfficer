@@ -6,6 +6,7 @@ from officer.models import (
     MetricsError,
 )
 
+
 class TooLargeFileViolation(FileMetricViolation):
     """You should write less code in one file."""
 
@@ -44,7 +45,9 @@ class FunctionLenghtChecker(AstMetricChecker):
 
         if function_code.count("\n") > self._max_func_len:
             self.add_violation(
-                TooLargeFunctionViolation(filename=self._filename, line=node.lineno, col=node.col_offset)
+                TooLargeFunctionViolation(
+                    filename=self._filename, line=node.lineno, col=node.col_offset
+                )
             )
 
         self.generic_visit(node)

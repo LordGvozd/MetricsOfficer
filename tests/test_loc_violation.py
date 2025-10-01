@@ -62,7 +62,9 @@ def test_short_file():
 def test_long_file():
     checker = FileLengthChecker(max_file_len=config.MAX_FILE_LEN)
 
-    _assert_violations(checker.find_violations("test", long_file), [TooLargeFileViolation])
+    _assert_violations(
+        checker.find_violations("test", long_file), [TooLargeFileViolation]
+    )
 
 
 def test_short_function():

@@ -11,20 +11,19 @@ class MetricViolation:
 
 
 class FileMetricViolation(MetricViolation):
-    """File metric violation. """
+    """File metric violation."""
 
     def __init__(self, filename: str) -> None:
         self.filename = filename
 
 
-
 class EntityMetricViolation(MetricViolation):
-    """Code entity (function, class, etc) metric violation. """
+    """Code entity (function, class, etc) metric violation."""
+
     def __init__(self, filename: str, line: int, col: int) -> None:
         self.filename = filename
         self.line = line
         self.col = col
-
 
 
 @runtime_checkable
