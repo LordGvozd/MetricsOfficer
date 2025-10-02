@@ -6,12 +6,14 @@ from officer.metrics.loc import (
     TooLargeFileViolation,
     TooLargeFunctionViolation,
     TooLargeMethodViolation,
-    TooLargeClassViolation
+    TooLargeClassViolation,
 )
 from officer.config import Settings
 from officer.models import MetricViolation
 
 default_settins = Settings()
+
+
 def _assert_violations(
     checker_output: list[MetricViolation] | None,
     expected_violations: list[type[MetricViolation]] | None,
@@ -44,15 +46,19 @@ short_function_def = "def foo():\n" + "\tprint('Hello')\n" * 20
 long_function_def = "def foo():\n" + "\tprint('Hello')\n" * 55
 
 
-short_method_def = f"""
+short_method_def = (
+    """
 class Foo():
-    def bar(self):
-        {"print('Hello')\n" * 20}
-"""
+\tdef bar(self):\n"""
+    + "\t\tprint(1)\n" * 20
+)
 
-long_method_def = """
+long_method_def = (
+    """
 class Foo():
-\tdef bar(self):\n""" + "\t\tprint(1)\n" * 40
+\tdef bar(self):\n"""
+    + "\t\tprint(1)\n" * 40
+)
 
 
 def test_short_file():
@@ -82,6 +88,7 @@ def test_long_function():
         checker.find_violations("test", long_function_def), [TooLargeFunctionViolation]
     )
 
+
 def test_short_method():
     checker = MethodLenghtChecker(default_settins)
 
@@ -94,5 +101,3 @@ def test_long_method():
     _assert_violations(
         checker.find_violations("test", long_method_def), [TooLargeMethodViolation]
     )
-
-

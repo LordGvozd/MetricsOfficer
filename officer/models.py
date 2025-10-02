@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import ast
-from pathlib import Path
+import string
 from typing import Protocol, runtime_checkable
 
 from officer.config import Settings
@@ -10,6 +10,8 @@ class MetricViolation:
     """Base violation."""
 
     code: int
+    error_msg: str
+
 
 
 class FileMetricViolation(MetricViolation):

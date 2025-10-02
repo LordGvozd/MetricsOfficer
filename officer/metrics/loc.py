@@ -1,4 +1,5 @@
 import ast
+import string
 from officer.models import (
     AstMetricChecker,
     EntityMetricViolation,
@@ -12,23 +13,29 @@ class TooLargeFileViolation(FileMetricViolation):
     """You should write less code in one file."""
 
     code: int = 101
+    error_msg: str = "This file is too large"
 
 
 class TooLargeFunctionViolation(EntityMetricViolation):
     """You should write less of code in one function."""
 
     code: int = 102
+    error_msg: str = "This function is too large"
+
 
 class TooLargeMethodViolation(EntityMetricViolation):
-    """You should write less of code in class method. """
+    """You should write less of code in class method."""
 
     code: int = 103
+    error_msg: str = "This method is too large"
 
 
 class TooLargeClassViolation(EntityMetricViolation):
-    """You should write less of code in one class. """
+    """You should write less of code in one class."""
 
     code: int = 104
+    error_msg: str = "This class is too large"
+
 
 class FileLengthChecker:
     def __init__(self, settings: Settings) -> None:
@@ -63,6 +70,7 @@ class FunctionLenghtChecker(AstMetricChecker):
 
         self.generic_visit(node)
 
+
 class MethodLenghtChecker(AstMetricChecker):
     def __init__(self, settings: Settings) -> None:
         super().__init__()
@@ -74,7 +82,7 @@ class MethodLenghtChecker(AstMetricChecker):
             if isinstance(child, ast.FunctionDef):
                 self._check_method_len(child)
         self.generic_visit(node)
-                
+
     def _check_method_len(self, node: ast.FunctionDef) -> None:
         function_code = ast.get_source_segment(self._source, node)
         print(function_code)
@@ -95,7 +103,6 @@ class ClassLenghtChecker(AstMetricChecker):
         super().__init__()
 
         self._max_method_len = settings.max_method_len
-    
 
     def _check_method_len(self, node: ast.FunctionDef) -> None:
         function_code = ast.get_source_segment(self._source, node)
@@ -110,6 +117,3 @@ class ClassLenghtChecker(AstMetricChecker):
                     filename=self._filename, line=node.lineno, col=node.col_offset
                 )
             )
-
-
-

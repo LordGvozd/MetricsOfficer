@@ -23,21 +23,21 @@ class Formater:
         """Formats violation."""
 
         code = f"{Colors.RED}MO{violation.code}{Colors.RESET}"
-        name = violation.__class__.__name__
+        error_msg = violation.error_msg
 
         if isinstance(violation, FileMetricViolation):
             filename = violation.filename
 
-            return f"{filename}: {code} {name}"
+            return f"{filename}: {code} {error_msg}"
 
         if isinstance(violation, EntityMetricViolation):
             filename = violation.filename
             line = violation.line
             col = violation.col
 
-            return f"{filename}:{line}:{col}: {code} {name}"
+            return f"{filename}:{line}:{col}: {code} {error_msg}"
 
-        return f"{code} {name}"
+        return f"{code} {error_msg}"
 
     def print_violations(self, violations: Sequence[MetricViolation]) -> None:
         """Format and print sequence of violations."""
