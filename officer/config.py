@@ -1,17 +1,16 @@
 from argparse import ArgumentParser, Namespace
-import argparse
 from pathlib import Path
 from typing import Final, Mapping, Sequence, Set
 from dataclasses import dataclass
 
-from officer.models import MetricsError
-
 
 @dataclass
 class Settings:
+    # LoC
     max_file_len: int = 200
     max_func_len: int = 50
     max_method_len: int = 30
+    max_class_len: int = 150
 
 
 class SettingsParser:

@@ -3,6 +3,8 @@ import ast
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
+from officer.config import Settings
+
 
 class MetricViolation:
     """Base violation."""
@@ -28,6 +30,7 @@ class EntityMetricViolation(MetricViolation):
 
 @runtime_checkable
 class MetricChecker[Violation: MetricViolation](Protocol):
+    def __init__(self, settings: Settings) -> None: ...
     def find_violations(self, filename: str, source: str) -> list[Violation] | None: ...
 
 

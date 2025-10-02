@@ -1,13 +1,17 @@
 from officer.metrics.loc import (
     FileLengthChecker,
     FunctionLenghtChecker,
+    MethodLenghtChecker,
+    ClassLenghtChecker,
     TooLargeFileViolation,
     TooLargeFunctionViolation,
+    TooLargeMethodViolation,
+    TooLargeClassViolation
 )
-from officer import config
+from officer.config import Settings
 from officer.models import MetricViolation
 
-
+default_settins = Settings()
 def _assert_violations(
     checker_output: list[MetricViolation] | None,
     expected_violations: list[type[MetricViolation]] | None,
@@ -46,21 +50,19 @@ class Foo():
         {"print('Hello')\n" * 20}
 """
 
-long_method_def = f"""
+long_method_def = """
 class Foo():
-    def bar(self):
-        {"print('Hello')\n" * 40}
-"""
+\tdef bar(self):\n""" + "\t\tprint(1)\n" * 40
 
 
 def test_short_file():
-    checker = FileLengthChecker(max_file_len=config.MAX_FILE_LEN)
+    checker = FileLengthChecker(default_settins)
 
     _assert_violations(checker.find_violations("test", short_file), None)
 
 
 def test_long_file():
-    checker = FileLengthChecker(max_file_len=config.MAX_FILE_LEN)
+    checker = FileLengthChecker(default_settins)
 
     _assert_violations(
         checker.find_violations("test", long_file), [TooLargeFileViolation]
@@ -68,14 +70,29 @@ def test_long_file():
 
 
 def test_short_function():
-    checker = FunctionLenghtChecker(max_func_len=config.MAX_FUNC_LEN)
+    checker = FunctionLenghtChecker(default_settins)
 
     _assert_violations(checker.find_violations("test", short_function_def), None)
 
 
 def test_long_function():
-    checker = FunctionLenghtChecker(max_func_len=config.MAX_FUNC_LEN)
+    checker = FunctionLenghtChecker(default_settins)
 
     _assert_violations(
         checker.find_violations("test", long_function_def), [TooLargeFunctionViolation]
     )
+
+def test_short_method():
+    checker = MethodLenghtChecker(default_settins)
+
+    _assert_violations(checker.find_violations("test", short_method_def), None)
+
+
+def test_long_method():
+    checker = MethodLenghtChecker(default_settins)
+
+    _assert_violations(
+        checker.find_violations("test", long_method_def), [TooLargeMethodViolation]
+    )
+
+
